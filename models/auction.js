@@ -20,5 +20,6 @@ module.exports = db.define('auction', {
       }
     }
   }, {
-    tableName: 'auction'
+    tableName: 'auction',
+    timestamps: false,
   });

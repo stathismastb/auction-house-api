@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
-const User = require('../models/user');
+const User = require('../models/user')
 const sequelize = require('sequelize')
 
 router.get('/', (req, res) =>{
@@ -22,6 +22,28 @@ router.get('/:id', (req, res) =>{
                                      model: User,
                                      mapToModel: true })
         .then(result => {
+            // console.log(result)
+            res.json(result)
+        })
+        .catch(err => console.log(err))
+})
+
+router.get('/models/all', (req, res) =>{
+    User.findAll()
+        .then(result => { 
+            // console.log(result)
+            res.json(result)
+        })
+        .catch(err => console.log(err))
+})
+
+router.get('/models/:id', (req, res) =>{
+    User.findAll({
+            where: {
+              iduser: req.params.id
+            }
+          })
+        .then(result => { 
             // console.log(result)
             res.json(result)
         })

@@ -16,5 +16,6 @@ module.exports = db.define('user', {
       allowNull: false
     }
   }, {
-    tableName: 'user'
+    tableName: 'user',
+    timestamps: false,
   });
