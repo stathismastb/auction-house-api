@@ -1,21 +1,20 @@
 const sequelize = require('sequelize')
 const db = require('../config/database')
 
-module.exports = db.define('user', {
-    iduser: {
+module.exports = db.define('categories', {
+    id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true,
+      field: 'id'
     },
-    username: {
+    name: {
       type: sequelize.STRING(45),
-      allowNull: false
-    },
-    password: {
-      type: sequelize.STRING(45),
-      allowNull: false
+      allowNull: false,
+      field: 'name'
     }
   }, {
-    tableName: 'user',
+    tableName: 'categories',
     timestamps: false,
   });

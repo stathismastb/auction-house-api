@@ -1,25 +1,25 @@
 const sequelize = require('sequelize')
 const db = require('../config/database')
 
-module.exports = db.define('auction', {
-    idauction: {
+module.exports = db.define('items', {
+    id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true,
+      field: 'id'
     },
     name: {
       type: sequelize.STRING(45),
-      allowNull: true
-    },
-    user_iduser: {
-      type: sequelize.INTEGER(11),
       allowNull: false,
-      references: {
-        model: 'user',
-        key: 'iduser'
-      }
+      field: 'name'
+    },
+    description: {
+      type: sequelize.STRING(512),
+      allowNull: false,
+      field: 'description'
     }
   }, {
-    tableName: 'auction',
+    tableName: 'items',
     timestamps: false,
   });

@@ -1,11 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
-const User = require('../models/user')
+const User = require('../models/users')
 const sequelize = require('sequelize')
 
 router.get('/', (req, res) =>{
-    const queryString = "SELECT * FROM user"
+    const queryString = "SELECT * FROM users"
     db.query(queryString, { type: sequelize.QueryTypes.SELECT,
                                      model: User,
                                      mapToModel: true })
@@ -17,7 +17,7 @@ router.get('/', (req, res) =>{
 })
 
 router.get('/:id', (req, res) =>{
-    const queryString = "SELECT * FROM user WHERE iduser = " + req.params.id
+    const queryString = "SELECT * FROM users WHERE id = " + req.params.id
     db.query(queryString, { type: sequelize.QueryTypes.SELECT,
                                      model: User,
                                      mapToModel: true })
@@ -40,7 +40,7 @@ router.get('/models/all', (req, res) =>{
 router.get('/models/:id', (req, res) =>{
     User.findAll({
             where: {
-              iduser: req.params.id
+              id: req.params.id
             }
           })
         .then(result => { 
