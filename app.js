@@ -1,6 +1,10 @@
 const express = require('express')
 const app = express()
 
+const cors = require('cors')
+app.use(cors())
+
+
 // Log to console and .log files
 const morgan = require('morgan')
 const fs = require('fs')
