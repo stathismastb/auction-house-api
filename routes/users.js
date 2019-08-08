@@ -43,11 +43,41 @@ router.get('/models/:id', (req, res) =>{
               id: req.params.id
             }
           })
-        .then(result => { 
+        .then(result => {
             // console.log(result)
             res.json(result)
         })
         .catch(err => console.log(err))
 })
+
+router.get('/username/:username', (req, res) =>{
+    User.findAll({
+            where:{
+              username: req.params.username
+            }
+          })
+        .then(result => {
+            res.json(result)
+        })
+        .catch(err => console.log(err))
+})
+
+router.post('/login/:username/:password', function(req, res) {
+
+    User.findAll({
+            where:{
+              username: req.params.username
+            }
+          })
+        .then(result => {
+            if(result != undefined && result != [] && result[0] != undefined && result[0].password == req.params.password){
+                res.send('OK')
+            }
+            else{
+                res.send('Not OK')
+            }
+        })
+        .catch(err => console.log(err))
+});
 
 module.exports = router
