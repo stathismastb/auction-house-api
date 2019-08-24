@@ -9,7 +9,7 @@ module.exports = db.define('auctions', {
       autoIncrement: true,
       field: 'id'
     },
-    sellerId: {
+    seller_id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
       references: {
@@ -18,7 +18,7 @@ module.exports = db.define('auctions', {
       },
       field: 'seller_id'
     },
-    itemId: {
+    item_id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
       references: {
@@ -27,7 +27,7 @@ module.exports = db.define('auctions', {
       },
       field: 'item_id'
     },
-    highestBidId: {
+    highest_bid_id: {
       type: sequelize.INTEGER(11),
       allowNull: true,
       references: {
@@ -36,28 +36,28 @@ module.exports = db.define('auctions', {
       },
       field: 'highest_bid_id'
     },
-    buyoutPrice: {
+    buyout_price: {
       type: "DOUBLE",
       allowNull: true,
       field: 'buyout_price'
     },
-    startingBid: {
+    starting_bid: {
       type: "DOUBLE",
       allowNull: false,
       field: 'starting_bid'
     },
-    bidCount: {
+    bid_count: {
       type: sequelize.INTEGER(11),
       allowNull: false,
       defaultValue: '0',
       field: 'bid_count'
     },
-    startTime: {
+    start_time: {
       type: sequelize.DATE,
       allowNull: false,
       field: 'start_time'
     },
-    endTime: {
+    end_time: {
       type: sequelize.DATE,
       allowNull: false,
       field: 'end_time'

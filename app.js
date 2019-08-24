@@ -4,6 +4,7 @@ const app = express()
 const cors = require('cors')
 app.use(cors())
 
+app.use(express.json())
 
 // Log to console and .log files
 const morgan = require('morgan')
@@ -26,6 +27,12 @@ app.get('/', (req, res) =>{
 
 // User routes
 app.use('/users', require('./routes/users'))
+
+// Item routes
+app.use('/items', require('./routes/items'))
+
+// Auction routes
+app.use('/auctions', require('./routes/auctions'))
 
 const port = 28992
 app.listen(port, console.log("Server started on port " + port))

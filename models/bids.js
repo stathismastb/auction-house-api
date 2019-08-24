@@ -9,7 +9,7 @@ module.exports = db.define('bids', {
       autoIncrement: true,
       field: 'id'
     },
-    auctionId: {
+    auction_id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
       references: {
@@ -18,7 +18,7 @@ module.exports = db.define('bids', {
       },
       field: 'auction_id'
     },
-    bidderId: {
+    bidder_id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
       references: {

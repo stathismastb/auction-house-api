@@ -9,7 +9,7 @@ module.exports = db.define('messages', {
       autoIncrement: true,
       field: 'id'
     },
-    senderId: {
+    sender_id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
       references: {
@@ -18,7 +18,7 @@ module.exports = db.define('messages', {
       },
       field: 'sender_id'
     },
-    receiverId: {
+    receiver_id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
       references: {
@@ -27,7 +27,7 @@ module.exports = db.define('messages', {
       },
       field: 'receiver_id'
     },
-    auctionId: {
+    auction_id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
       references: {
@@ -41,13 +41,13 @@ module.exports = db.define('messages', {
       allowNull: false,
       field: 'message'
     },
-    senderRead: {
+    sender_read: {
       type: sequelize.INTEGER(4),
       allowNull: false,
       defaultValue: '0',
       field: 'sender_read'
     },
-    receiverRead: {
+    receiver_read: {
       type: sequelize.INTEGER(4),
       allowNull: false,
       defaultValue: '0',

@@ -25,12 +25,12 @@ module.exports = db.define('users', {
       allowNull: false,
       field: 'password'
     },
-    firstName: {
+    first_name: {
       type: sequelize.STRING(45),
       allowNull: false,
       field: 'first_name'
     },
-    lastName: {
+    last_name: {
       type: sequelize.STRING(45),
       allowNull: false,
       field: 'last_name'
@@ -60,13 +60,13 @@ module.exports = db.define('users', {
       allowNull: false,
       field: 'afm'
     },
-    isAdmin: {
+    is_admin: {
       type: sequelize.INTEGER(4),
       allowNull: false,
       defaultValue: '0',
       field: 'is_admin'
     },
-    isConfirmed: {
+    is_confirmed: {
       type: sequelize.INTEGER(4),
       allowNull: false,
       defaultValue: '0',

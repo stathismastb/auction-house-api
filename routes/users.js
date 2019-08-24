@@ -71,7 +71,8 @@ router.post('/login/:username/:password', function(req, res) {
           })
         .then(result => {
             if(result != undefined && result != [] && result[0] != undefined && result[0].password == req.params.password){
-                res.send('OK')
+                res.send(result[0])
+                //res.send('OK')
             }
             else{
                 res.send('Not OK')
@@ -81,3 +82,4 @@ router.post('/login/:username/:password', function(req, res) {
 });
 
 module.exports = router
+

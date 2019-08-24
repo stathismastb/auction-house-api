@@ -2,7 +2,7 @@ const sequelize = require('sequelize')
 const db = require('../config/database')
 
 module.exports = db.define('itemCategories', {
-    itemId: {
+    item_id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
       primaryKey: true,
@@ -12,7 +12,7 @@ module.exports = db.define('itemCategories', {
       },
       field: 'item_id'
     },
-    categoryId: {
+    category_id: {
       type: sequelize.INTEGER(11),
       allowNull: false,
       primaryKey: true,
