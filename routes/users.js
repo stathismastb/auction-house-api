@@ -89,5 +89,17 @@ router.post('/register', (req, res) =>{
   })
 })
 
+router.patch('/confirmUser/:id', function (req, res) {
+  User.update(
+    {is_confirmed: "1"},
+    {where: {id: req.params.id} }
+  )
+  .then(result => {
+    console.log(result)
+    res.send(result)
+  })
+  .catch(err => console.log(err))
+})
+
 module.exports = router
 
