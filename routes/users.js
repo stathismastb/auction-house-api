@@ -81,5 +81,13 @@ router.post('/login/:username/:password', function(req, res) {
         .catch(err => console.log(err))
 });
 
+router.post('/register', (req, res) =>{
+  console.log(req.body)
+  User.create(req.body).then(user => {
+    res.json(user)
+    console.log(JSON.stringify(user))
+  })
+})
+
 module.exports = router
 

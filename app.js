@@ -9,9 +9,9 @@ app.use(express.json())
 // Log to console and .log files
 const morgan = require('morgan')
 const fs = require('fs')
-app.use(morgan('dev'))
-app.use(morgan('combined', {stream: fs.createWriteStream('./logs/access-combined.log', {flags: 'a'})}));
-app.use(morgan('dev', {stream: fs.createWriteStream('./logs/access-dev.log', {flags: 'a'})}));
+// app.use(morgan('dev'))
+// app.use(morgan('combined', {stream: fs.createWriteStream('./logs/access-combined.log', {flags: 'a'})}));
+// app.use(morgan('dev', {stream: fs.createWriteStream('./logs/access-dev.log', {flags: 'a'})}));
 
 // Database
 const db = require('./config/database')
