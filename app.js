@@ -34,5 +34,11 @@ app.use('/items', require('./routes/items'))
 // Auction routes
 app.use('/auctions', require('./routes/auctions'))
 
+// Categories routes
+app.use('/categories', require('./routes/categories'))
+
+// Item Categories routes
+app.use('/item_categories', require('./routes/item_categories'))
+
 const port = 28992
 app.listen(port, console.log("Server started on port " + port))
