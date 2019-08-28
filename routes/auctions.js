@@ -2,7 +2,16 @@ const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
 const Auction = require('../models/auctions')
+const Item = require('../models/items')
+const ItemCategories = require('../models/item_categories')
+const Categories = require('../models/categories')
+const User = require('../models/users')
 const sequelize = require('sequelize')
+
+Auction.belongsTo(Item, {foreignKey: 'item_id'})
+Auction.belongsTo(User, {foreignKey: 'seller_id'})
+Item.belongsToMany(Categories, {through: ItemCategories, foreignKey: 'item_id' })
+Categories.belongsToMany(Item, {through: ItemCategories, foreignKey: 'category_id' })
 
 router.get('/', (req, res) =>{
   Auction.findAll()
@@ -26,6 +35,22 @@ router.post('/newAuction', (req, res) =>{
       res.json(auction)
       console.log(JSON.stringify(auction))
     })
+})
+
+router.get('/loadAuction', (req, res) =>{
+  Auction.findAll({
+    include: [
+      {
+        model: Item,
+        include: [{model: Categories}]
+      },
+      {
+        model: User
+      }
+    ]
+  })
+  .then(auction => res.json(auction))
+  .catch(console.error)
 })
 
 module.exports = router

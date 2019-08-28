@@ -118,5 +118,18 @@ router.post('/api/login', (req, res) => {
   token.send(user, res)
 });
 
+router.patch('/confirmUser/:id', function (req, res) {
+  User.update(
+    {is_confirmed: "1"},
+    {where: {id: req.params.id} }
+  )
+  .then(result => {
+    console.log(result)
+    res.send(result)
+  })
+  .catch(err => console.log(err))
+})
+
+
 module.exports = router
 
