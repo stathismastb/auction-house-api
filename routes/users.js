@@ -4,6 +4,8 @@ const db = require('../config/database')
 const User = require('../models/users')
 const sequelize = require('sequelize')
 
+var token = require('./token')
+
 router.get('/', (req, res) =>{
     const queryString = "SELECT * FROM users"
     db.query(queryString, { type: sequelize.QueryTypes.SELECT,
@@ -88,6 +90,33 @@ router.post('/register', (req, res) =>{
     console.log(JSON.stringify(user))
   })
 })
+
+router.get('/api/home', (req, res) => {
+  res.json({
+    message: 'Welcome to the API'
+  });
+});
+
+router.post('/api/posts', (req, res) => {
+  const authData = token.verify(req)
+  if(authData == -1) res.sendStatus(403);
+  else {
+    res.json({
+      message: 'Post created...',
+      authData
+    });
+  }
+});
+
+router.post('/api/login', (req, res) => {
+  const user = {
+    id: 1,
+    username: 'brad',
+    email: 'brad@gmail.com'
+  }
+
+  token.send(user, res)
+});
 
 module.exports = router
 
