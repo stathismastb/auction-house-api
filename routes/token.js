@@ -11,7 +11,7 @@ module.exports = {
       if(err)
         return -1
       else
-        return authData
+        return authData.payload
     })
   },
 

@@ -73,8 +73,8 @@ router.post('/login/:username/:password', function(req, res) {
           })
         .then(result => {
             if(result != undefined && result != [] && result[0] != undefined && result[0].password == req.params.password){
-                res.send(result[0])
-                //res.send('OK')
+              result[0].password = ""
+              token.send(result[0], res)
             }
             else{
                 res.send('Not OK')
@@ -101,10 +101,7 @@ router.post('/api/posts', (req, res) => {
   const authData = token.verify(req)
   if(authData == -1) res.sendStatus(403);
   else {
-    res.json({
-      message: 'Post created...',
-      authData
-    });
+    res.json(authData);
   }
 });
 
