@@ -6,12 +6,15 @@ const Item = require('../models/items')
 const ItemCategories = require('../models/item_categories')
 const Categories = require('../models/categories')
 const User = require('../models/users')
+const Bid = require('../models/bids')
 const sequelize = require('sequelize')
 
 Auction.belongsTo(Item, {foreignKey: 'item_id'})
 Auction.belongsTo(User, {foreignKey: 'seller_id'})
 Item.belongsToMany(Categories, {through: ItemCategories, foreignKey: 'item_id' })
 Categories.belongsToMany(Item, {through: ItemCategories, foreignKey: 'category_id' })
+
+Auction.belongsTo(Bid, {foreignKey: 'highest_bid_id'})
 
 router.get('/', (req, res) =>{
   Auction.findAll()
@@ -51,6 +54,49 @@ router.get('/loadAuction', (req, res) =>{
   })
   .then(auction => res.json(auction))
   .catch(console.error)
+})
+
+router.get('/loadAuction/:id', (req, res) =>{
+  Auction.findAll({
+    where:{
+      id: req.params.id
+    },
+    include: [
+      {
+        model: Item,
+        include: [{model: Categories}]
+      },
+      {
+        model: User
+      }
+    ]
+  })
+  .then(auction => res.json(auction))
+  .catch(console.error)
+})
+
+router.patch('/newBid/:id/:highest_bid_id', function (req, res) {
+  Auction.update(
+    {highest_bid_id: req.params.highest_bid_id},
+    {where: {id: req.params.id} }
+  )
+  .then(result => {
+    console.log(result)
+    res.send(result)
+  })
+  .catch(err => console.log(err))
+})
+
+router.patch('/disableAuction/:id', function (req, res) {
+  Auction.update(
+    {active: '0'},
+    {where: {id: req.params.id} }
+  )
+  .then(result => {
+    console.log(result)
+    res.send(result)
+  })
+  .catch(err => console.log(err))
 })
 
 module.exports = router
