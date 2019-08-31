@@ -16,6 +16,8 @@ Categories.belongsToMany(Item, {through: ItemCategories, foreignKey: 'category_i
 
 Auction.belongsTo(Bid, {foreignKey: 'highest_bid_id'})
 
+var token = require('./token')
+
 router.get('/', (req, res) =>{
   Auction.findAll()
       .then(result => { 
@@ -90,6 +92,41 @@ router.patch('/newBid/:id/:highest_bid_id', function (req, res) {
 router.patch('/disableAuction/:id', function (req, res) {
   Auction.update(
     {active: '0'},
+    {where: {id: req.params.id} }
+  )
+  .then(result => {
+    console.log(result)
+    res.send(result)
+  })
+  .catch(err => console.log(err))
+})
+
+router.get('/MyAuctions', (req, res) =>{
+  const authData = token.verify(req)
+  if(authData == -1) res.sendStatus(403);
+  else {
+    Auction.findAll({
+      where: {
+        seller_id: authData.id
+      },
+      include: [
+        {
+          model: Item,
+          include: [{model: Categories}]
+        },
+        { // maybe it doesn't need
+          model: User
+        }
+      ]
+    })
+    .then(myAuction => res.json(myAuction))
+    .catch(console.error)
+  }
+})
+
+router.patch('/updateStartingBid/:id/:amount', function (req, res) {
+  Auction.update(
+    {starting_bid: req.params.amount},
     {where: {id: req.params.id} }
   )
   .then(result => {
