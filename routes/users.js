@@ -18,18 +18,6 @@ router.get('/', (req, res) =>{
         .catch(err => console.log(err))
 })
 
-router.get('/:id', (req, res) =>{
-    const queryString = "SELECT * FROM users WHERE id = " + req.params.id
-    db.query(queryString, { type: sequelize.QueryTypes.SELECT,
-                                     model: User,
-                                     mapToModel: true })
-        .then(result => {
-            // console.log(result)
-            res.json(result)
-        })
-        .catch(err => console.log(err))
-})
-
 router.get('/models/all', (req, res) =>{
     User.findAll()
         .then(result => { 
@@ -62,6 +50,31 @@ router.get('/username/:username', (req, res) =>{
             res.json(result)
         })
         .catch(err => console.log(err))
+})
+
+router.get('/details', (req, res) =>{
+  console.log("RUNNING DETAILS")
+  const authData = token.verify(req)
+  if(authData == -1) res.sendStatus(403);
+  else {
+    console.log(authData)
+    console.log(authData.username)
+    User.findAll({
+          where:{
+            username: authData.username
+          }
+        })
+      .then(result => {
+          if(result != undefined && result != [] && result[0] != undefined){
+            result[0].password = ""
+            res.json(result[0])
+          }
+          else{
+            res.sendStatus(500);
+          }
+      })
+      .catch(err => console.log(err))
+  }
 })
 
 router.post('/login/:username/:password', function(req, res) {
@@ -125,6 +138,18 @@ router.patch('/confirmUser/:id', function (req, res) {
     res.send(result)
   })
   .catch(err => console.log(err))
+})
+
+router.get('/:id', (req, res) =>{
+    const queryString = "SELECT * FROM users WHERE id = " + req.params.id
+    db.query(queryString, { type: sequelize.QueryTypes.SELECT,
+                                     model: User,
+                                     mapToModel: true })
+        .then(result => {
+            // console.log(result)
+            res.json(result)
+        })
+        .catch(err => console.log(err))
 })
 
 
