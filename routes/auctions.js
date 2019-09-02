@@ -15,6 +15,7 @@ Item.belongsToMany(Categories, {through: ItemCategories, foreignKey: 'item_id' }
 Categories.belongsToMany(Item, {through: ItemCategories, foreignKey: 'category_id' })
 
 Auction.belongsTo(Bid, {foreignKey: 'highest_bid_id'})
+Bid.belongsTo(User, {foreignKey: 'bidder_id'})
 
 var token = require('./token')
 
@@ -44,6 +45,9 @@ router.post('/newAuction', (req, res) =>{
 
 router.get('/loadAuction', (req, res) =>{
   Auction.findAll({
+    where: {
+      active: "1"
+    },
     include: [
       {
         model: Item,
@@ -51,6 +55,10 @@ router.get('/loadAuction', (req, res) =>{
       },
       {
         model: User
+      },
+      {
+        model: Bid,
+        include: [{model: User}]
       }
     ]
   })
@@ -61,7 +69,8 @@ router.get('/loadAuction', (req, res) =>{
 router.get('/loadAuction/:id', (req, res) =>{
   Auction.findAll({
     where:{
-      id: req.params.id
+      id: req.params.id,
+      active: "1"
     },
     include: [
       {
@@ -70,6 +79,10 @@ router.get('/loadAuction/:id', (req, res) =>{
       },
       {
         model: User
+      },
+      {
+        model: Bid,
+        include: [{model: User}]
       }
     ]
   })
@@ -77,9 +90,10 @@ router.get('/loadAuction/:id', (req, res) =>{
   .catch(console.error)
 })
 
-router.patch('/newBid/:id/:highest_bid_id', function (req, res) {
+router.patch('/newBid/:id/:highest_bid_id/:count', function (req, res) {
   Auction.update(
-    {highest_bid_id: req.params.highest_bid_id},
+    {highest_bid_id: req.params.highest_bid_id,
+    bid_count: req.params.count},
     {where: {id: req.params.id} }
   )
   .then(result => {
@@ -135,6 +149,26 @@ router.patch('/updateStartingBid/:id/:amount', function (req, res) {
   })
   .catch(err => console.log(err))
 })
+
+function getRemainingTime(end_time) {
+  var seconds = (new Date(end_time) - this.calcTime(6))/1000
+  if(seconds < 0) 
+    return false
+  else
+    return true
+}
+
+function bidCount(auction_id) {
+  Auction.findAll({
+    where: {id: auction_id} 
+  })
+      .then(result => { 
+          console.log("RESULT " + result.bid_count )
+          return result.bid_count + 1 
+          //res.json(result)
+      })
+      .catch(err => console.log(err))
+}
 
 module.exports = router
 
