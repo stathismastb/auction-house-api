@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
 const User = require('../models/users')
+const Message = require('../models/messages')
 const sequelize = require('sequelize')
 
 var token = require('./token')
@@ -138,6 +139,21 @@ router.patch('/confirmUser/:id', function (req, res) {
     res.send(result)
   })
   .catch(err => console.log(err))
+})
+
+router.get('/inbox', (req, res) =>{
+  const authData = token.verify(req)
+  if(authData == -1) res.sendStatus(403);
+  else {
+    var user_id = authData.id
+    Message.findAll({
+      where: {
+        receiver_id: user_id
+      }
+    })
+    .then(messages => res.json(messages))
+    .catch(console.error)
+  }
 })
 
 router.get('/:id', (req, res) =>{
