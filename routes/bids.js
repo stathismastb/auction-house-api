@@ -2,7 +2,10 @@ const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
 const Bid = require('../models/bids')
+const User = require('../models/users')
 const sequelize = require('sequelize')
+
+// Bid.belongsTo(User, {foreignKey: 'bidder_id'})
 
 router.get('/models/all', (req, res) =>{
     Bid.findAll()
@@ -70,6 +73,23 @@ Bid.create(req.body).then(bid => {
 //     res.send(result)
 //   })
 //   .catch(err => console.log(err))
+// })
+
+// router.get('/HighestBid', (req, res) =>{
+//   Bid.findAll({
+//           where: {
+//             id: req.params.id
+//           },
+//           include: [
+//             {
+//               model: User
+//             }
+//           ]
+//         })
+//       .then(result => {
+//           res.json(result)
+//       })
+//       .catch(err => console.log(err))
 // })
 
 module.exports = router

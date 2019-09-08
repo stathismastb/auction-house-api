@@ -128,12 +128,39 @@ router.get('/MyAuctions', (req, res) =>{
           model: Item,
           include: [{model: Categories}]
         },
-        { // maybe it doesn't need
+        { 
           model: User
         }
       ]
     })
     .then(myAuction => res.json(myAuction))
+    .catch(console.error)
+  }
+})
+
+router.get('/MyAuctionBid', (req, res) =>{
+  const authData = token.verify(req)
+  if(authData == -1) res.sendStatus(403);
+  else {
+    Auction.findAll({
+      where: {
+        seller_id: authData.id
+      },
+      include: [
+        {
+          model: Item,
+          include: [{model: Categories}]
+        },
+        {
+          model: User
+        },
+        {
+          model: Bid,
+          include: [{model: User}]
+        }
+      ]
+    })
+    .then(auction => res.json(auction))
     .catch(console.error)
   }
 })
