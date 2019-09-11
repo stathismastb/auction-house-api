@@ -105,6 +105,21 @@ router.post('/sendMessage', (req, res) =>{
     .catch(err => console.log(err))
   })
 
+  router.post('/deleteMessage/:id', function (req, res) {
+    Message.destroy({
+      where: {
+        id: req.params.id
+      } 
+    })
+    .then(status => {
+      if(status)
+        res.sendStatus(200)
+      else  
+        res.sendStatus(404)
+    })
+    .catch(err => console.log(err))
+  })
+
 
 module.exports = router
 

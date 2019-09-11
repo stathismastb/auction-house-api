@@ -17,6 +17,12 @@ Categories.belongsToMany(Item, {through: ItemCategories, foreignKey: 'category_i
 Auction.belongsTo(Bid, {foreignKey: 'highest_bid_id'})
 Bid.belongsTo(User, {foreignKey: 'bidder_id'})
 
+const Op = sequelize.Op;
+const operatorsAliases = {
+  $like: Op.like,
+  $between: Op.between
+}
+
 var token = require('./token')
 
 router.get('/', (req, res) =>{
@@ -196,6 +202,120 @@ function bidCount(auction_id) {
       })
       .catch(err => console.log(err))
 }
+
+router.get('/searchAuctionViaCategory/:name', (req, res) =>{
+  Auction.findAll({
+    where: {
+      active: "1"
+    },
+    include: [
+      {
+        model: Item,
+        include: [
+          {model: Categories,
+          where: {
+            name: { [Op.like]: '%'+req.params.name+'%'}
+          }
+          },
+        ]
+      },
+      {
+        model: User
+      },
+      {
+        model: Bid,
+        include: [{model: User}]
+      }
+    ]
+  })
+  .then(auction => res.json(auction))
+  .catch(console.error)
+})
+
+router.get('/searchAuctionViaFreeText/:name', (req, res) =>{
+  Auction.findAll({
+    where: {
+      active: "1"
+    },
+    include: [
+      {
+        model: Item,
+        where: {
+          name: { [Op.like]: '%'+req.params.name+'%'}
+        },
+        include: [
+          {model: Categories}
+        ]
+      },
+      {
+        model: User
+      },
+      {
+        model: Bid,
+        include: [{model: User}]
+      }
+    ]
+  })
+  .then(auction => res.json(auction))
+  .catch(console.error)
+})
+
+router.get('/searchAuctionViaPrice/:min/:max', (req, res) =>{
+  Auction.findAll({
+    where: {
+      active: "1",
+      starting_bid: {
+        [Op.between]: [req.params.min, req.params.max ]
+      }
+    },
+    include: [
+      {
+        model: Item,
+        include: [
+          {model: Categories}
+        ]
+      },
+      {
+        model: User
+      },
+      {
+        model: Bid,
+        include: [{model: User}]
+      }
+    ]
+  })
+  .then(auction => res.json(auction))
+  .catch(console.error)
+})
+
+router.get('/searchAuctionViaCountry/:country', (req, res) =>{
+  Auction.findAll({
+    where: {
+      active: "1"
+    },
+    include: [
+      {
+        model: Item,
+        include: [
+          {model: Categories}
+        ]
+      },
+      {
+        model: User,
+        where: {
+          country: { [Op.like]: '%'+req.params.country+'%'}
+        }
+      },
+      {
+        model: Bid,
+        include: [{model: User}]
+      }
+    ]
+  })
+  .then(auction => res.json(auction))
+  .catch(console.error)
+})
+
 
 module.exports = router
 
