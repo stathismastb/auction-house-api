@@ -46,5 +46,11 @@ app.use('/bids', require('./routes/bids'))
 // Messages routes
 app.use('/messages', require('./routes/messages'))
 
+// testing about images
+app.use('/images', require('./routes/images'))
+// app.get("/getImage", (req, res) => {
+//     res.sendFile(path.join(__dirname, "./images/earino19.png"));
+//   });
+
 const port = 28992
 app.listen(port, console.log("Server started on port " + port))
