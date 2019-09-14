@@ -5,6 +5,8 @@ const User = require('../models/users')
 const Message = require('../models/messages')
 const sequelize = require('sequelize')
 
+const bidderInfo = require('../dataset/bidders-categories.json')
+
 var token = require('./token')
 
 router.get('/', (req, res) =>{
