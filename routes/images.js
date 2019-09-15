@@ -35,8 +35,24 @@ router.post('/uploadImage/:newName', upload.single('myFile'), (req, res, next) =
     res.send(file) 
 })
 
+router.post('/uploadImageRaw/:newName', (req, res) => {
+  var fs = require('fs')
+  fs.writeFile(
+    './images/' + req.params.newName + '.json', 
+    JSON.stringify(req.body.imageData),
+    (err) => { if (err) console.log(err) }
+  )
+
+  res.send("OK")
+  // res.send("OK")
+})
+
 router.get("/getImage/:name", (req, res) => {
     res.sendFile(req.params.name + '.png', { root: dirname })
+})
+
+router.get("/getImageRaw/:name", (req, res) => {
+  res.sendFile(req.params.name + '.json', { root: dirname })
 })
 
 
