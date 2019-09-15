@@ -9,6 +9,8 @@ const User = require('../models/users')
 const Bid = require('../models/bids')
 const sequelize = require('sequelize')
 
+const bidderInfo = require('../dataset/bidders-categories.json')
+
 Auction.belongsTo(Item, {foreignKey: 'item_id'})
 Auction.belongsTo(User, {foreignKey: 'seller_id'})
 Item.belongsToMany(Categories, {through: ItemCategories, foreignKey: 'item_id' })
@@ -20,7 +22,7 @@ Bid.belongsTo(User, {foreignKey: 'bidder_id'})
 const Op = sequelize.Op;
 const operatorsAliases = {
   $like: Op.like,
-  $between: Op.between
+  $between: Op.between,
 }
 
 var token = require('./token')
@@ -316,6 +318,100 @@ router.get('/searchAuctionViaCountry/:country', (req, res) =>{
   .catch(console.error)
 })
 
+router.get('/recommended', (req, res) =>{
+  const authData = token.verify(req)
+  if(authData == -1) res.sendStatus(403);
+  else {
+    var categories = getRecommendations(authData.username, 5)
+    if (categories == "User not found")
+      res.sendStatus(404)
+    Auction.findAll({
+      where: {
+        active: "1"
+      },
+      include: [
+        {
+          model: Item,
+          include: [
+            {model: Categories,
+            where: {
+              // name: { [Op.like]: '%'+req.params.name+'%'}
+              [Op.or]: [{name: categories[0].category}, {name: categories[1].category}, {name: categories[2].category}, {name: categories[3].category}, {name: categories[4].category}]
+            }
+            },
+          ]
+        },
+        {
+          model: User
+        },
+        {
+          model: Bid,
+          include: [{model: User}]
+        }
+      ]
+    })
+    .then(auction => res.json(auction))
+    .catch(console.error)
+    }
+})
+
+function getRecommendations(username, recommendations){
+  var targetUsername = username
+  var targetUser = bidderInfo.find((x) => { return x.username == targetUsername });
+  
+  if(targetUser == undefined){
+    return "User not found"
+  }
+  
+  var neighbors = []
+  
+  for(let i in bidderInfo){
+    if(bidderInfo[i].username == targetUser.username) continue
+  
+    neighbors.push({ username: bidderInfo[i].username, count: 0 })
+  
+    for(let k in targetUser.categories){
+      for(let l in bidderInfo[i].categories){
+        if(targetUser.categories[k].category == bidderInfo[i].categories[l].category){
+          neighbors[neighbors.length-1].count += targetUser.categories[k].count * bidderInfo[i].categories[l].count
+        }
+      }
+    }
+  }
+  
+  neighbors.sort((a,b) => (a.count < b.count) ? 1 : ((a.count > b.count) ? -1 : 0))
+  
+  nn = []
+  for(let i in neighbors.slice(0,3)){
+    for(let j in bidderInfo){
+      if(neighbors[i].username == bidderInfo[j].username){
+        nn.push(bidderInfo[j])
+      }
+    }
+  }
+  
+  summedCategories = []
+  exists = false
+  for(let i in nn){
+    for(let j in nn[i].categories){
+      for(let k in summedCategories){
+        if(summedCategories[k].category == nn[i].categories[j].category){
+          summedCategories[k].count += nn[i].categories[j].count
+          exists = true
+          break
+        }
+      }
+      if(exists == true){
+        exists = false
+      }
+      else{
+        summedCategories.push(nn[i].categories[j])
+      }
+    }
+  }
+  
+  return summedCategories.slice(0,recommendations)
+}
 
 module.exports = router
 
