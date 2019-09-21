@@ -21,4 +21,14 @@ router.get('/all', (req, res) =>{
       .catch(err => console.log(err))
 })
 
+router.get('/createFromJson', (req, res) =>{
+    const categories = require('../dataset/categories.json')
+
+    for(let i in categories){
+        Category.create({ name: categories[i] }).then(category => {
+            res.json(category)
+        })
+    }
+})
+
 module.exports = router

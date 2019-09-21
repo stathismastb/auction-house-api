@@ -158,6 +158,28 @@ router.get('/inbox', (req, res) =>{
   }
 })
 
+router.get('/createFromJson', (req, res) =>{
+  found = false
+  for(let i in bidderInfo){
+    let username = bidderInfo[i].username
+    let entry = {
+      email: username + "@gmail.com",
+      username: username,
+      password: '202cb962ac59075b964b07152d234b70',
+      first_name: username.slice(0, username.length/2),
+      last_name: username.slice(username.length/2, username.length),
+      city: username + " City",
+      country: username + " Land",
+      telephone: '1-800-' + username,
+      afm: '139482038',
+      is_confirmed: 1
+    }
+
+    User.create(entry)
+  }
+  res.send('OK')
+})
+
 router.get('/:id', (req, res) =>{
     const queryString = "SELECT * FROM users WHERE id = " + req.params.id
     db.query(queryString, { type: sequelize.QueryTypes.SELECT,
