@@ -1,7 +1,7 @@
 const sequelize = require('sequelize')
 
-module.exports = new sequelize('auction_house_db', 'ted', 'ted', {
-    host: '83.212.109.75',
+module.exports = new sequelize('auction_house_db', 'root', 'enteryoupasswordhere',{
+    host: 'localhost',
     port: '3306',
     dialect: 'mysql',
 });
